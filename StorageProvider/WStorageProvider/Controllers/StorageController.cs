@@ -1,7 +1,11 @@
-﻿using Amazon;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
@@ -9,17 +13,10 @@ using Kit;
 using Kit.Services.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using StorageProvider.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
+using WStorageProvider.Models;
 
-namespace StorageProvider.Controllers
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
+namespace WStorageProvider.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -125,7 +122,7 @@ namespace StorageProvider.Controllers
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex, "Unexpected error");
+                _logger.LogError(ex, "Unexpected error");
                 return new Response<DFileInfo>(APIResponseResult.INTERNAL_ERROR, ex.Message);
             }
         }
@@ -154,7 +151,7 @@ namespace StorageProvider.Controllers
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex, "Unexpected error");
+                _logger.LogError(ex, "Unexpected error");
                 return new Response<DFile>(APIResponseResult.INTERNAL_ERROR, ex.Message);
             }
         }

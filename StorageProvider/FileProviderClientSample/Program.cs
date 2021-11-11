@@ -10,7 +10,7 @@ namespace FileProviderClientSample
 {
     internal class Program
     {
-        private const string URL = "https://localhost:5001/Storage";
+        private const string URL = "https://bald6s2l1a.execute-api.us-east-2.amazonaws.com/Prod/Storage";
         static void Main(string[] args)
         {
             ShowMenu().Wait();
@@ -40,7 +40,7 @@ namespace FileProviderClientSample
         }
         private static async Task SubirArchivo(FileInfo file)
         {
-            using (FileStream fileStream = new FileStream(@"C:\Users\jonyj\Desktop\oscar.txt", FileMode.Open, FileAccess.Read))
+            using (FileStream fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
             {
                 using (MemoryStream memoryStream = new MemoryStream())
                 {

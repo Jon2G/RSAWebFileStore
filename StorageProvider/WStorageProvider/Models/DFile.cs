@@ -1,8 +1,6 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
-using System;
-using System.IO;
 
-namespace StorageProvider.Models
+namespace WStorageProvider.Models
 {
     [DynamoDBTable("DFile")]
     public class DFile : DFileInfo
