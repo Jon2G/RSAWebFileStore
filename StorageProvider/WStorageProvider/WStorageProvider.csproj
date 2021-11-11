@@ -6,6 +6,7 @@
     <!-- This property makes the build directory similar to a publish directory and helps the AWS .NET Lambda Mock Test Tool find project dependencies. -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	  <LangVersion>latest</LangVersion>
+	  <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="6.1.0" />
@@ -13,9 +14,11 @@
 		<PackageReference Include="Amazon.Lambda.Core" Version="2.1.0" />
 		<PackageReference Include="Amazon.Lambda.Serialization.Json" Version="2.0.0" />
 		<PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.2.0" />
-		<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.0.96" />
+		<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.0.97" />
 		<PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.21" />
 		<PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 	</ItemGroup>
   <ItemGroup>
     <Reference Include="Kit">
