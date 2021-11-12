@@ -10,7 +10,7 @@ namespace FileProviderClientSample
 {
     internal class Program
     {
-        private const string URL = "https://bald6s2l1a.execute-api.us-east-2.amazonaws.com/Prod/Storage";
+        private const string URL = "http://wstorageprovider-prod.us-east-2.elasticbeanstalk.com/Storage";
         static void Main(string[] args)
         {
             ShowMenu().Wait();
