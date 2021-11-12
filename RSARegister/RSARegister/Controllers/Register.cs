@@ -89,16 +89,16 @@ namespace RSARegister.Controllers
                     PrivateKey = rsa.CreatePrivateKey()
                 };
                 await dBContext.SaveAsync(clientModel);
-                var response = new APIGatewayProxyResponse
-                {
-                    StatusCode = (int)HttpStatusCode.OK,
-                    Body = clientModel.ID.ToString(),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "text/plain" } }
-                };
-                if (response.StatusCode != (int)HttpStatusCode.OK)
-                {
-                    return new ResponseClientKey(Guid.Empty, "Fatal error");
-                }
+                //var response = new APIGatewayProxyResponse
+                //{
+                //    StatusCode = (int)HttpStatusCode.OK,
+                //    Body = clientModel.ID.ToString(),
+                //    Headers = new Dictionary<string, string> { { "Content-Type", "text/plain" } }
+                //};
+                //if (response.StatusCode != (int)HttpStatusCode.OK)
+                //{
+                //    return new ResponseClientKey(Guid.Empty, "Fatal error");
+                //}
                 ResponseClientKey clientKey = new ResponseClientKey()
                 {
                     Id = clientModel.ID,

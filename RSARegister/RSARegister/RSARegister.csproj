@@ -6,6 +6,7 @@
     <!-- This property makes the build directory similar to a publish directory and helps the AWS .NET Lambda Mock Test Tool find project dependencies. -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	  <LangVersion>latest</LangVersion>
+	  <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.4.0" />
