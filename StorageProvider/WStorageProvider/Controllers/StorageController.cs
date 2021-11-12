@@ -70,6 +70,7 @@ namespace WStorageProvider.Controllers
                     }
                 };
                 await _amazonDynamoDb.CreateTableAsync(createRequest);
+                IsInited = true;
             }
         }
         [HttpGet]
