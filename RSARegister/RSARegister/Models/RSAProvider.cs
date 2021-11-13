@@ -8,7 +8,7 @@ namespace RSARegister.Models
         public RSACryptoServiceProvider RSAService { get; set; }
         public RSAProvider()
         {
-            this.RSAService = new RSACryptoServiceProvider();
+            this.RSAService = new RSACryptoServiceProvider(,);
         }
         public string CreatePublicKey()
         {

@@ -1,0 +1,150 @@
+﻿@page "/"
+@using Amazon
+@using Amazon.DynamoDBv2
+@using Amazon.DynamoDBv2.DataModel
+@using Kit
+@using WebClient.Clients
+@using WebClient.Components
+@using WebClient.Models
+
+
+<div style="
+    display: inline-flex;
+">
+    <img src="images/cloud-intelligence.png" style="
+    margin: 10px;
+">
+    <h1 style="
+    margin: auto;
+">
+        Tiny file uploader
+    </h1>
+</div>
+
+
+@if (file is null)
+{
+    <p style="
+    font-size: 20px;
+">Select load and share some files</p>
+
+    <div class="drag-drop-zone">
+        <InputFile OnChange="ViewFile" />
+        @status
+    </div>
+}
+else if (!Uploading)
+{
+    <div class="card">
+        <p>File: @file.FileName </p>
+        <p>Type: @file.Extension</p>
+        @if (file.SizeInMbs <= 0)
+        {
+            <p>Size: @Math.Round(file.SizeInMbs,2) Mbs</p>
+        }
+        else
+        {
+            <p>Size: &lt; 1 Mb</p>
+        }
+        <button class="btn success" @onclick="Upload">Upload</button>
+    </div>
+}
+else
+{
+    <h3>Uploading...</h3>
+
+}
+@if (!string.IsNullOrEmpty(Error))
+{
+    <h3 class="error">@Error</h3>
+}
+
+
+@code {
+    const string DefaultStatus = "Drop a file or click to choose a file";
+    const int MaxFileSize = 2 * 1024 * 1024; // 5MB
+    string status = DefaultStatus;
+    string Error = null;
+    [Inject]
+    public DynamoClient Dynamo { get; set; }
+    [CascadingParameter]
+    public IModalService Modal { get; set; }
+    DFileData file;
+    bool Uploading;
+    async Task ViewFile(IFileListEntry[] files)
+    {
+
+        var sfile = files.FirstOrDefault();
+        if (sfile == null)
+        {
+            return;
+        }
+        else if (sfile.Size > MaxFileSize)
+        {
+            status = $"That's too big. Max size: {MaxFileSize} bytes.";
+        }
+        else
+        {
+            status = "Loading...";
+            file = new DFileData()
+                {
+                    FileName = sfile.Name,
+                    Extension = sfile.Type,
+                    SizeInMbs = sfile.Size.ToSize(BytesConverter.SizeUnits.MB)
+                };
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                await sfile.Data.CopyToAsync(memoryStream);
+                file.Data = memoryStream.ToArray();
+            }
+            status = DefaultStatus;
+        }
+    }
+    async Task Upload()
+    {
+        await Task.Yield();
+        Uploading = true;
+        StateHasChanged();
+        ClientKey key = await RSAKeyClient.Register();
+        if (key is null)
+        {
+            Error = "Rsa key provider failed to register...";
+            Reload();
+            return;
+        }
+        if (!await Dynamo.Save(key))
+        {
+            Error = "Dynamo failed saiving client key...";
+            Reload();
+            return;
+        }
+
+        if (file.Data.Length != 128 && !await RSAKeyClient.Encrypt(file, key))
+        {
+            Error = "RSA failed encrypting file...";
+            Reload();
+            return;
+        }
+
+        DFile sFile = await StorageProviderClient.Upload(file);
+        if (sFile is null)
+        {
+            Error = "Storage Provider failed saiving file...";
+            return;
+        }
+        Reload();
+        var parameters = new ModalParameters();
+        parameters.Add("file", sFile);
+        parameters.Add("key", key);
+        Modal.Show<LinkModal>("Get link", parameters);
+
+    }
+    private void Reload()
+    {
+        file = null;
+        Error = null;
+        status = DefaultStatus;
+        StateHasChanged();
+    }
+}

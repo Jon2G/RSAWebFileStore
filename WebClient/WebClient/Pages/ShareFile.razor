@@ -1,0 +1,137 @@
+﻿@page "/ShareFile/{fileId}/{keyId}"
+@using Amazon
+@using Amazon.DynamoDBv2
+@using Amazon.DynamoDBv2.DataModel
+@using AsyncAwaitBestPractices
+@using Kit
+@using Microsoft.Extensions.FileProviders
+@using WebClient.Clients
+@using WebClient.Components
+@using WebClient.Models
+
+
+<div style="
+    display: inline-flex;
+">
+    <img src="images/cloud-intelligence.png" style="
+    margin: 10px;
+">
+    <h1 style="
+    margin: auto;
+">
+        Tiny file uploader
+    </h1>
+</div>
+
+
+@if (file is not null)
+{
+    <div class="card">
+        <p>File: @file.FileName </p>
+        <p>Type: @file.Extension</p>
+        @if (file.SizeInMbs <= 0)
+        {
+            <p>Size: @Math.Round(file.SizeInMbs,2) Mbs</p>
+        }
+        else
+        {
+            <p>Size: &lt; 1 Mb</p>
+        }
+        <button class="btn success" @onclick="Download">Download</button>
+    </div>
+}
+else
+{
+    <h2>Loading...</h2>
+}
+@if (!string.IsNullOrEmpty(Error))
+{
+    <h3 class="error">@Error</h3>
+}
+
+@code {
+
+    [Inject]
+    public DynamoClient Dynamo { get; set; }
+    [Parameter]
+    public string fileId { get; set; }
+    [Parameter]
+    public string keyId { get; set; }
+    public string Error { get; set; }
+
+    public DFileData file { get; set; }
+    private bool firstTime { get; set; }
+    [Inject]
+    public IJSRuntime js { get; set; }
+    private string GetContentType(string extension)
+    {
+        var types = GetMimeTypes();
+        var ext = extension.ToLowerInvariant();
+        return types[ext];
+    }
+
+    private Dictionary<string, string> GetMimeTypes()
+    {
+        return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformats officedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
+    }
+    void Download()
+    {
+        js.InvokeVoidAsync("jsSaveAsFile",
+                        file.FileName,
+                        Convert.ToBase64String(file.Data)
+                        );
+    }
+
+    async Task PrepareForDownload()
+    {
+        await Task.Yield();
+        ClientKey key = await RSAKeyClient.GetPrivateKeys(keyId);
+        if (key is null)
+        {
+            Error = "Rsa key provider failed to get private key...";
+            return;
+        }
+        file = await StorageProviderClient.Download(fileId);
+        if (file is null)
+        {
+            Error = "Storage Provider failed downloading file...";
+            return;
+        }
+
+        if (!await RSAKeyClient.Decrypt(file, key))
+        {
+            Error = "RSA failed decrypting file...";
+            return;
+        }
+        StateHasChanged();
+
+    }
+
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (!firstTime)
+        {
+            PrepareForDownload().SafeFireAndForget();
+            firstTime = true;
+        }
+    }
+
+
+
+
+}

@@ -1,0 +1,50 @@
+﻿@using WebClient.Models
+<h2>@file.FileName</h2>
+<div jsaction="rcuQ6b:rcuQ6b; transitionend:JLH18" jsshadow="" jscontroller="yY0Kmc">
+    <div jsname="kVoUBf" jsslot="" class="boqDrivesharedialogCommonAnimatedfadeParentContainer">
+        <div class="boqDrivesharedialogCommonAnimatedfadeContainer Hidden Collapsed" aria-labelledby="c19" role="region"><div jsname="XmgVhc" jsaction="WNDm:LucMXb;jb7Cp:b0wsWd" class="boqDrivesharedialogLinkLinksettingsContainer" tabindex="-1" jscontroller="em0gBe"><div class="appsDriveElementsMaterialScrollcontainerEl "><div tabindex="-1" class="appsDriveElementsMaterialScrollcontainerContainer  appsDriveElementsMaterialScrollbarMaki isVertical" style="max-height: 40vh;"><div class="appsDriveElementsMaterialScrollcontainerContent"><span class="appsDriveElementsMaterialScrollcontainerSeamCoverTop"></span><div class="boqDrivesharedialogLinkLinksettingsLinkSettings"><div class="boqDrivesharedialogLinkLinksettingsCheckboxGroup" role="group" aria-label="Untitled Diagram.drawio"></div></div><span class="appsDriveElementsMaterialScrollcontainerSeamCoverBottom"></span></div></div></div></div></div><div class="boqDrivesharedialogCommonAnimatedfadeContainer" id="c20" aria-labelledby="c18" aria-expanded="true" role="region">
+            <div jsaction="rcuQ6b:rcuQ6b; transitionend:JLH18" jsshadow="" jscontroller="yY0Kmc">
+                <div jsname="kVoUBf" jsslot="" class="boqDrivesharedialogCommonAnimatedfadeParentContainer">
+                    <div class="boqDrivesharedialogCommonAnimatedfadeContainer boqDrivesharedialogCommonIdomcardCardContent">
+                        <div jsaction="rcuQ6b:rcuQ6b; transitionend:JLH18" jsshadow="" jscontroller="yY0Kmc">
+                            <div jsname="kVoUBf" jsslot="" class="boqDrivesharedialogCommonAnimatedfadeParentContainer">
+                                <div class="boqDrivesharedialogCommonAnimatedfadeContainer">
+                                    <div class="boqDrivesharedialogLinkLinkcopyLinkCopyContainer" jsname="kMOlId" jsaction="JIbuQc:iSAZEf(lmPqlf)" jscontroller="vVXhrf">
+                                        <div class="boqDrivesharedialogLinkLinkcopyUrlsBox boqDrivesharedialogLinkLinkcopyUrlsBoxSpecificPeople">
+                                            <div class="boqDrivesharedialogLinkLinkcopyUrlsIconContainer hidden"><span class="mdc-button__icon boqDrivesharedialogLinkLinkcopyUrlsIcon" aria-hidden="true"><svg focusable="false" width="20" height="20" viewBox="0 0 24 24" class=" materialdesignWizIconSvgsSvgIcon"><path d="M15 8c0-1.42-.5-2.73-1.33-3.76.42-.14.86-.24 1.33-.24 2.21 0 4 1.79 4 4s-1.79 4-4 4c-.43 0-.84-.09-1.23-.21-.03-.01-.06-.02-.1-.03A5.98 5.98 0 0 0 15 8zm1.66 5.13C18.03 14.06 19 15.32 19 17v3h4v-3c0-2.18-3.58-3.47-6.34-3.87zM9 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2m0 9c-2.7 0-5.8 1.29-6 2.01V18h12v-1c-.2-.71-3.3-2-6-2M9 4c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm0 9c2.67 0 8 1.34 8 4v3H1v-3c0-2.66 5.33-4 8-4z"></path></svg></span></div>
+                                            <input id="linkInput" type="text" readonly="" class="boqDrivesharedialogLinkLinkcopyUrlsText" jsname="Nsxved" jsaction="click:PFkbBe; focus:FqlX0" aria-label="Shareable link" tabindex="-1" value="@link">
+                                        </div><button onclick="copyjs('@link')" class="mdc-button GmButtonText GmButtonTextDarkTheme boqDrivesharedialogLinkLinkcopyLinkCopyButton" jscontroller="soHxf" data-idom-class="GmButtonText GmButtonTextDarkTheme boqDrivesharedialogLinkLinkcopyLinkCopyButton" jsname="lmPqlf"><div class="mdc-button__ripple"></div><span jsname="V67aGc" class="mdc-button__label">Copy link</span></button>
+                                    </div><div>
+                                        <div class="appsDriveElementsMaterialScrollcontainerEl ">
+                                            <div tabindex="-1" class="appsDriveElementsMaterialScrollcontainerContainer  appsDriveElementsMaterialScrollbarMaki isVertical" style="max-height: 40vh;">
+                                                <div class="appsDriveElementsMaterialScrollcontainerContent">
+                                                    <span class="appsDriveElementsMaterialScrollcontainerSeamCoverTop"></span>
+
+                                                    <span class="appsDriveElementsMaterialScrollcontainerSeamCoverBottom"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public const string Url = "http://webclient-prod.us-east-2.elasticbeanstalk.com/ShareFile";
+    [Parameter]
+    public DFile file { get; set; }
+    [Parameter]
+    public ClientKey key { get; set; }
+    public string link => $"{Url}/{file.Id}/{key.Id}";
+
+    public LinkModal()
+    {
+
+    }
+}
